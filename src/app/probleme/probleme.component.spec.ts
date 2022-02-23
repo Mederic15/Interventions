@@ -31,4 +31,11 @@ describe('ProblemeComponent', () => {
     let errors = zone.errors || {};
     expect(errors['minlength']).toBeTruthy();
     });
+
+  it("#2 | Zone PRÉNOM valide avec 3 caractères", () =>{
+    let zone = component.problemeForm.controls['prenom'];
+    zone.setValue("a".repeat(3));
+    expect(zone.valid).toBeTruthy();
+  })
+  
 });
