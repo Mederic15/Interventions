@@ -8,4 +8,13 @@ describe('longueur zone Validator', () => {
         let result= validatorFn(control as AbstractControl);
         expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
     })
+
+    it('#8 | Une phrase avec des mots est valide', ()=> {
+        let control = { value: 'Vive angular' }
+        let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
+        let result= validatorFn(control as AbstractControl);
+        expect(result).toBeNull();
+    })
+
+    
 });
