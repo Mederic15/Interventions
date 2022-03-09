@@ -50,4 +50,11 @@ describe('longueur zone Validator', () => {
         let result= validatorFn(control as AbstractControl);
         expect(result).toBeNull();
     })
+
+    it('#14 | Une chaîne nulle est invalide', ()=> {
+        let control = {}
+        let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
+        let result= validatorFn(control as AbstractControl);
+        expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
+    })
 });
