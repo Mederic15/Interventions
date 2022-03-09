@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { VerifierCaracteresValidator } from '../shared/longueur-minumum/longueur-minimum.component';
 
 import { ProblemeComponent } from './probleme.component';
 
@@ -51,16 +52,18 @@ describe('ProblemeComponent', () => {
     expect(errors).toBeTruthy();
   })
 
-  it("#5 | Zone PRÉNOM valide avec 10 espaces", () =>{
-    let zone = component.problemeForm.controls['prenom'];
-    zone.setValue(" ".repeat(10));
-    expect(zone.valid).toBeTruthy();
-  })
+  it("#5 | Zone PRÉNOM invalide avec 10 espaces", () =>{
+    let control = { value: ' '.repeat(10) }
+    let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
+    let result= validatorFn(control as AbstractControl);
+    expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
+})
 
-  it("#6 | Zone PRÉNOM valide avec 2 espaces et 1 caractère", () =>{
-    let zone = component.problemeForm.controls['prenom'];
-    zone.setValue("a  ");
-    expect(zone.valid).toBeTruthy();
+  it("#6 | Zone PRÉNOM invalide avec 2 espaces et 1 caractère", () =>{
+    let control = { value: 'a  ' }
+      let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
+      let result= validatorFn(control as AbstractControl);
+      expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
   })
 
  
