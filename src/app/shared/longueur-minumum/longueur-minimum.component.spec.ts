@@ -29,4 +29,11 @@ describe('longueur zone Validator', () => {
         let result= validatorFn(control as AbstractControl);
         expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
     })
+
+    it('#11 | Une phrase avec 2 espaces et 1 caractère est invalide', ()=> {
+        let control = { value: '  x' }
+        let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
+        let result= validatorFn(control as AbstractControl);
+        expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
+    })
 });
