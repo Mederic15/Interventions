@@ -36,4 +36,18 @@ describe('longueur zone Validator', () => {
         let result= validatorFn(control as AbstractControl);
         expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
     })
+
+    it('#12 | Une phrase avec 3 espaces et 3 caractères est valide', ()=> {
+        let control = { value: '   xxx' }
+        let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
+        let result= validatorFn(control as AbstractControl);
+        expect(result).toBeNull();
+    })
+
+    it('#13 | Une phrase avec 5 espaces, 5 caractères et 5 espaces est valide', ()=> {
+        let control = { value: '     xxxxx' }
+        let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
+        let result= validatorFn(control as AbstractControl);
+        expect(result).toBeNull();
+    })
 });
