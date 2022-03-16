@@ -1,8 +1,10 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { VerifierCaracteresValidator } from '../shared/longueur-minumum/longueur-minimum.component';
 
 import { ProblemeComponent } from './probleme.component';
+import { TypeproblemeService } from './typeprobleme.service';
 
 describe('ProblemeComponent', () => {
   let component: ProblemeComponent;
@@ -10,8 +12,9 @@ describe('ProblemeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [ ProblemeComponent ]
+      imports: [ReactiveFormsModule, HttpClientModule],
+      declarations: [ ProblemeComponent ],
+      providers:[TypeproblemeService]
     })
     .compileComponents();
   });
@@ -30,7 +33,10 @@ describe('ProblemeComponent', () => {
     let zone = component.problemeForm.controls['prenom'];
     zone.setValue("a".repeat(2));
     let errors = zone.errors || {};
-    expect(errors['minlength']).toBeTruthy();
+
+    let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
+    let result= validatorFn(zone as AbstractControl);
+    expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
     });
 
   it("#2 | Zone PRÉNOM valide avec 3 caractères", () =>{
@@ -64,6 +70,35 @@ describe('ProblemeComponent', () => {
       let validatorFn = VerifierCaracteresValidator.longueurMinimum(3);
       let result= validatorFn(control as AbstractControl);
       expect(result['nbreCaracteresInsuffisant']).toBeTruthy();
+  })
+
+  it("#15 | Zone TELEPHONE est désactivée quand ne pas me notifier", () =>{
+    component.appliquerNotifications("NePasMeNotifier");
+
+    let zone =component.problemeForm.get('telephone');
+    expect(zone.disabled).toBeTrue();
+  })
+
+  it("#16 | Zone TELEPHONE est vide quand ne pas me notifier", () =>{
+    component.appliquerNotifications("NePasMeNotifier");
+
+    
+    let zone = component.problemeForm.get('telephone');
+    expect(zone.value).toBeNull();
+  })
+
+  it("#17 | Zone ADRESSE COURRIEL est désactivée quand ne pas me notifier", () =>{
+    component.appliquerNotifications("NePasMeNotifier");
+
+    let zone =component.problemeForm.get('courrielGroup.courriel');
+    expect(zone.disabled).toBeTrue();
+  })
+
+  it("#18 | Zone CONFIRMER COURRIEL est désactivée quand ne pas me notifier", () =>{
+    component.appliquerNotifications("NePasMeNotifier");
+
+    let zone =component.problemeForm.get('courrielGroup.courrielConfirmation');
+    expect(zone.disabled).toBeTrue();
   })
 
  
