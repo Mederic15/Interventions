@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { emailMatcherValidator } from '../shared/email-matcher/email-matcher.component';
 import { VerifierCaracteresValidator } from '../shared/longueur-minumum/longueur-minimum.component';
 import { ITypeProbleme } from './probleme';
 import { TypeproblemeService } from './typeprobleme.service';
@@ -22,7 +23,7 @@ export class ProblemeComponent implements OnInit {
       typeprobleme: ['', [Validators.required]] ,
       courrielGroup: this.fb.group({
         courriel: [{value: '', disabled: true}],
-        courrielConfirmation: [{value: '', disabled: true}],
+        courrielConfirmation: [{value: '', disabled: true}, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')],
       }),
       telephone: [{value: '', disabled: true}],      
     })
@@ -34,26 +35,38 @@ export class ProblemeComponent implements OnInit {
     
   }
 
-  appliquerNotifications(typeNotification: string): void {
+  setNotification(typeNotification: string): void {
     const courrielNottificationsControl = this.problemeForm.get('courrielGroup.courriel');
+    const courrielConfirmationNottificationsControl = this.problemeForm.get('courrielGroup.courrielConfirmation');
     const telephoneNotificationsControl = this.problemeForm.get('telephone');
+    const courrielGroupControl = this.problemeForm.get('courrielGroup');
+    const courrielDifferents = emailMatcherValidator.courrielDifferents();
 
     courrielNottificationsControl.clearValidators();
     courrielNottificationsControl.reset();
     courrielNottificationsControl.disable();
+
+    courrielConfirmationNottificationsControl.clearValidators();
+    courrielConfirmationNottificationsControl.reset();
+    courrielConfirmationNottificationsControl.disable();
 
     telephoneNotificationsControl.clearValidators();
     telephoneNotificationsControl.reset();
     telephoneNotificationsControl.disable();
 
     if (typeNotification === 'courriel') {
-      courrielNottificationsControl.setValidators([Validators.required]);
+      courrielNottificationsControl.setValidators([Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);
+      courrielConfirmationNottificationsControl.setValidators([Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')]);
       courrielNottificationsControl.enable();
+      courrielConfirmationNottificationsControl.enable();
+      courrielGroupControl.setValidators([Validators.compose([courrielDifferents])]);
     }else if (typeNotification === 'telephone') {
       telephoneNotificationsControl.setValidators([Validators.required]);
       telephoneNotificationsControl.enable();
     }
     courrielNottificationsControl.updateValueAndValidity();
+    courrielConfirmationNottificationsControl.updateValueAndValidity();
+    courrielGroupControl.updateValueAndValidity();
     telephoneNotificationsControl.updateValueAndValidity();
   }
 
