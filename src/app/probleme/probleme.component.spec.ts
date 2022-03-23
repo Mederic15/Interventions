@@ -123,19 +123,15 @@ describe('ProblemeComponent', () => {
   it('#22 | Zone ADRESSE COURRIEL est invalide sans valeur quand notifier par courriel', () => {
     component.setNotification('courriel');
     let zone = component.problemeForm.get('courrielGroup.courriel');
-    zone.setValue('')
-
-    let errors = zone.errors;
-    expect(errors).toBeTruthy(); 
+    let errors = zone.errors
+    expect(errors['required']).toBeTrue(); 
   });
 
   it('#23 | Zone CONFIRMER COURRIEL est invalide sans valeur quand notifier par courriel', () => {
     component.setNotification('courriel');
     let zone = component.problemeForm.get('courrielGroup.courrielConfirmation');
-    zone.setValue('')
-
     let errors = zone.errors;
-    expect(errors).toBeTruthy(); 
+    expect(errors['required']).toBeTruthy(); 
   });
 
   it('#24 | Zone ADRESSE COURRIEL est invalide avec un format non conforme', () => {
@@ -198,6 +194,63 @@ describe('ProblemeComponent', () => {
 
     let groupe = component.problemeForm.get('courrielGroup');
     expect(groupe.valid).toBeTruthy(); 
+  });
+
+  it('#29 | Zone TELEPHONE est activée quand notifier par messagerie texte', () => {
+    component.setNotification('telephone');
+    let zone = component.problemeForm.get('telephone');
+    expect(zone.enabled).toBeTrue(); 
+  });
+
+  it('#30 | Zone ADRESSE COURRIEL est désactivée quand notifier par messagerie texte', () => {
+    component.setNotification('telephone');
+    let zone = component.problemeForm.get('courrielGroup.courriel');
+    expect(zone.disabled).toBeTrue(); 
+  });
+
+  it('#31 | Zone CONFIRMER COURRIEL est désactivée quand notifier par messagerie texte', () => {
+    component.setNotification('telephone');
+    let zone = component.problemeForm.get('courrielGroup.courrielConfirmation');
+    expect(zone.disabled).toBeTrue(); 
+  });
+
+  it('#32 | Zone TELEPHONE est invalide sans valeur quand notifier par messagerie texte', () => {
+    component.setNotification('telephone');
+    let zone = component.problemeForm.get('telephone');
+    zone.setValue('');
+    let errors = zone.errors;
+    expect(errors).toBeTruthy(); 
+  });
+
+  it('#33 | Zone TELEPHONE est invalide avec des caractères non-numériques quand notifier par messagerie texte', () => {
+    component.setNotification('telephone');
+    let zone = component.problemeForm.get('telephone');
+    zone.setValue('allo');
+    let errors = zone.errors;
+    expect(errors).toBeTruthy(); 
+  });
+
+  it('#34 | Zone TELEPHONE est invalide avec 9 chiffres consécutifs quand notifier par messagerie texte', () => {
+    component.setNotification('telephone');
+    let zone = component.problemeForm.get('telephone');
+    zone.setValue('012345678');
+    let errors = zone.errors;
+    expect(errors).toBeTruthy(); 
+  });
+
+  it('#35 | Zone TELEPHONE est invalide avec 11 chiffres consécutifs quand notifier par messagerie texte', () => {
+    component.setNotification('telephone');
+    let zone = component.problemeForm.get('telephone');
+    zone.setValue('01234567890');
+    let errors = zone.errors;
+    expect(errors).toBeTruthy(); 
+  });
+
+  it('#36 | Zone TELEPHONE est valide avec 10 chiffres consécutifs quand notifier par messagerie texte', () => {
+    component.setNotification('telephone');
+    let zone = component.problemeForm.get('telephone');
+    zone.setValue('0123456789');
+    expect(zone.valid).toBeTruthy(); 
   });
 
 });
