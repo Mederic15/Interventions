@@ -21,16 +21,20 @@ export class ProblemeComponent implements OnInit {
       prenom: ['' , [VerifierCaracteresValidator.longueurMinimum(3), Validators.required]], 
       nom: ['' , [VerifierCaracteresValidator.longueurMinimum(3), Validators.required]],
       typeprobleme: ['', [Validators.required]] ,
+      notification: ['pasnotification'],
       courrielGroup: this.fb.group({
         courriel: [{value: '', disabled: true}],
-        courrielConfirmation: [{value: '', disabled: true}, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+')],
+        courrielConfirmation: [{value: '', disabled: true}],
       }),
       telephone: [{value: '', disabled: true}],      
     })
 
     this.typeproblemeService.obtenirTypesProbleme()
         .subscribe(typesProbleme => this.typesProbleme = typesProbleme,
-                   error => this.errorMessage = <any>error);  
+                   error => this.errorMessage = <any>error);
+                   
+        this.problemeForm.get('notification').valueChanges
+          .subscribe(value => this.setNotification(value));
 
     
   }
@@ -74,3 +78,7 @@ export class ProblemeComponent implements OnInit {
   }
 
 }
+function subscibe(arg0: (value: any) => void) {
+  throw new Error('Function not implemented.');
+}
+
