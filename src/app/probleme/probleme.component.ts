@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { emailMatcherValidator } from '../shared/email-matcher/email-matcher.component';
 import { VerifierCaracteresValidator } from '../shared/longueur-minumum/longueur-minimum.component';
-import { ITypeProbleme } from './probleme';
+import { ITypeProbleme } from './typeProbleme';
 import { TypeproblemeService } from './typeprobleme.service';
 
 @Component({
@@ -20,12 +20,14 @@ export class ProblemeComponent implements OnInit {
     this.problemeForm = this.fb.group({
       prenom: ['' , [VerifierCaracteresValidator.longueurMinimum(3), Validators.required]], 
       nom: ['' , [VerifierCaracteresValidator.longueurMinimum(3), Validators.required]],
-      typeprobleme: ['', [Validators.required]] ,
+      //typeprobleme: ['', [Validators.required]] ,
+      typeprobleme: [''],
       notification: ['pasnotification'],
       courrielGroup: this.fb.group({
         courriel: [{value: '', disabled: true}],
         courrielConfirmation: [{value: '', disabled: true}],
-      }),
+      }//, {Validator: emailMatcher}
+      ),
       telephone: [{value: '', disabled: true}], 
       descriptionProbleme: ['', [Validators.required, Validators.minLength(5)]],
       noUnite: '',
