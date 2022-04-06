@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { emailMatcherValidator } from '../shared/email-matcher/email-matcher.component';
 import { VerifierCaracteresValidator } from '../shared/longueur-minumum/longueur-minimum.component';
+import { IProbleme } from './probleme';
 import { ITypeProbleme } from './typeProbleme';
 import { TypeproblemeService } from './typeprobleme.service';
+import { Router } from '@angular/router';
+import { ProblemeService } from './probleme.service';
 
 @Component({
   selector: 'Inter-probleme',
@@ -14,7 +17,10 @@ export class ProblemeComponent implements OnInit {
   problemeForm: FormGroup;
   typesProbleme: ITypeProbleme[];
   errorMessage: string;
-  constructor(private fb: FormBuilder, private typeproblemeService: TypeproblemeService) { }
+
+  probleme: IProbleme;
+
+  constructor(private fb: FormBuilder, private typeproblemeService: TypeproblemeService, private problemeService: ProblemeService, private route: Router) { }
 
   ngOnInit(): void {
     this.problemeForm = this.fb.group({
@@ -80,6 +86,26 @@ export class ProblemeComponent implements OnInit {
   }
 
   save(): void {
+    if (this.problemeForm.dirty && this.problemeForm.valid) {
+        // Copy the form values over the problem object values
+        this.probleme = this.problemeForm.value;
+        this.probleme.id = 0;
+        this.probleme.courriel = this.problemeForm.get('courrielGroup.courriel').value;
+        //this.probleme.dateProbleme = new Date();
+        this.problemeService.saveProbleme(this.probleme)
+            .subscribe( // on s'abonne car on a un retour du serveur à un moment donné avec la callback fonction
+                () => this.onSaveComplete(),  // Fonction callback
+                (error: any) => this.errorMessage = <any>error
+            );
+    } else if (!this.problemeForm.dirty) {
+        this.onSaveComplete();
+    }
+  }
+
+  onSaveComplete(): void { 
+    // Reset the form to clear the flags
+    this.problemeForm.reset();  // Pour remettre Dirty à false.  Autrement le Route Guard va dire que le formulaire n'est pas sauvegardé
+    this.route.navigate(['/accueil']);
   }
 
 }
