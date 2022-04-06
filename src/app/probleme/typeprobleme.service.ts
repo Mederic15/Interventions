@@ -1,14 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
-import { ITypeProbleme } from './probleme';
+import { ITypeProbleme } from './typeProbleme';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TypeproblemeService {
 
-  private baseUrl = 'api/typesprobleme';
+  private baseUrl = 'https://localhost:7119/api/Intervention';
 
   constructor(private http: HttpClient) { }
 
